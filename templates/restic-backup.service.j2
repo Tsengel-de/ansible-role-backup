@@ -1,0 +1,10 @@
+[Unit]
+Description=Restic backup
+
+[Service]
+Type=oneshot
+User={{ restic_user }}
+Group={{ restic_group }}
+WorkingDirectory=/usr/local/
+CPUQuota={{ 25 * ansible_processor_vcpus }}%
+ExecStart={{ restic_etc_dir }}/restic-backup.sh

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+#Define a timestamp function
+timestamp() {
+date "+%b %d %Y %T %Z"
+}
+
+RESTIC_WRAPPER={{ restic_etc_dir }}/restic-wrapper.sh
+LOG={{ restic_log }}
+
+# Add timestamp
+echo "$(timestamp): restic-repo-init started" | tee -a $LOG
+echo "-------------------------------------------------------------------------------" | tee -a $LOG
+
+check=`$RESTIC_WRAPPER cat config 2>/dev/null`
+
+if [ -z "$check" ]; then
+  echo "Repo $RESTIC_REPOSITORY is not initilized. Initializing it...." | tee -a $LOG
+  $RESTIC_WRAPPER init 2>&1 | tee -a $LOG
+else
+  echo "Repo $RESTIC_REPOSITORY already initialized"  | tee -a $LOG
+fi
+
+# Add timestamp
+echo "-------------------------------------------------------------------------------" | tee -a $LOG
+echo "$(timestamp): restic-repo-init finished" | tee -a $LOG
+printf "\n" | tee -a $LOG
